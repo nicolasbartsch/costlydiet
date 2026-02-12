@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres:17
+    container_name: costlydiet-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: costlydiet
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pwd
+    ports:
+      - "8084:5432"
+    volumes:
+      - costlydiet_data:/var/lib/postgresql/data
+
+volumes:
+  costlydiet_data:
