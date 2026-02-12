@@ -1,10 +1,13 @@
 package com.bartsch.costlydiet.service.implementation;
 
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
 import com.bartsch.costlydiet.service.IngredientService;
 import com.bartsch.costlydiet.model.mapper.IngredientMapper;
 import com.bartsch.costlydiet.repository.IngredientRepository;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,12 @@ public class IngredientServiceImpl implements IngredientService {
   public IngredientServiceImpl(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {
     this.ingredientRepository = ingredientRepository;
     this.ingredientMapper = ingredientMapper;
+  }
+
+  @Override
+  public List<IngredientSearchResDto> searchIngredients(String name) {
+    name = name == null ? "" : name;
+    return ingredientMapper.toIngredientSearchResDtoList(ingredientRepository.searchByNameContains(name));
   }
 
 }
