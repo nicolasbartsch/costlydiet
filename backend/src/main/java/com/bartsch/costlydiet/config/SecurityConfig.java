@@ -1,5 +1,6 @@
 package com.bartsch.costlydiet.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+  @Value("${cors.allowed-origins}")
+  private List<String> allowedOrigins;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -21,6 +25,7 @@ public class SecurityConfig {
     http.cors(c -> {
       CorsConfigurationSource source = request -> {
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         return config;
