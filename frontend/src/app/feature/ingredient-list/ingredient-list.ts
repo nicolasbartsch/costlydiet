@@ -1,4 +1,5 @@
 import { inject, Component, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { IngredientApi } from '../../core/services/api/ingredient.api';
 import { IngredientSearchResDto } from '../../shared/model/ingredient';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
 export class IngredientList {
 
   private ingredientApiService = inject(IngredientApi)
+  private router = inject(Router);
 
   protected ingredients = signal<IngredientSearchResDto[] | null>(null);
   protected searchQuery = '';
@@ -33,6 +35,10 @@ export class IngredientList {
           console.error(err);
         }
       })
+  }
+
+  create() {
+    this.router.navigate(['/ingredients/create'])
   }
 
 }
