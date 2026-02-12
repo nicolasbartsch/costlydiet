@@ -1,5 +1,7 @@
 package com.bartsch.costlydiet.service.implementation;
 
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
 import com.bartsch.costlydiet.service.IngredientService;
 import com.bartsch.costlydiet.model.mapper.IngredientMapper;
@@ -27,6 +29,13 @@ public class IngredientServiceImpl implements IngredientService {
   public List<IngredientSearchResDto> searchIngredients(String name) {
     name = name == null ? "" : name;
     return ingredientMapper.toIngredientSearchResDtoList(ingredientRepository.searchByNameContains(name));
+  }
+
+  @Override
+  public IngredientCreateResDto addIngredient(IngredientCreateReqDto ingredientCreateReqDto) {
+    log.debug("Adding ingredient {}", ingredientCreateReqDto);
+    return ingredientMapper
+        .toIngredientCreateResDto(ingredientRepository.save(ingredientMapper.toEntity(ingredientCreateReqDto)));
   }
 
 }
