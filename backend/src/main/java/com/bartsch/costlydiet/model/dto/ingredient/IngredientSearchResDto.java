@@ -7,5 +7,6 @@ public class IngredientSearchResDto {
   private Long id;
   private String name;
   private Long price;
+  private Long calories;
   private String notes;
 }
