@@ -6,4 +6,23 @@ spring:
     username: ${POSTGRES_USER:admin}
     password: ${POSTGRES_PASSWORD:pwd}
     driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:8084}/${POSTGRES_DB:costlydiet}
+    user: ${POSTGRES_USER:admin}
+    password: ${POSTGRES_PASSWORD:pwd}
+    locations: classpath:db/migration
+    validate-migration-naming: true
 
