@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IngredientSearchResDto } from '../../../shared/model/ingredient';
+import { IngredientCreateReqDto, IngredientCreateResDto, IngredientSearchResDto } from '../../../shared/model/ingredient';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +10,10 @@ export class IngredientApi {
 
   searchIngredients(name: string) {
     return this.http.get<IngredientSearchResDto[]>(`http://localhost:8080/api/ingredients?name=${name}`)
+  }
+
+  addIngredient(ingredient: IngredientCreateReqDto) {
+    return this.http.post<IngredientCreateResDto>(`http://localhost:8080/api/ingredients`, ingredient)
   }
 
 }
