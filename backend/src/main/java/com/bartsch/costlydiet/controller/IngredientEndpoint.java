@@ -1,9 +1,13 @@
 package com.bartsch.costlydiet.controller;
 
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
 import com.bartsch.costlydiet.service.IngredientService;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +29,12 @@ public class IngredientEndpoint {
   public List<IngredientSearchResDto> searchIngredients(@RequestParam(required = false) String name) {
     log.info("getIngredients()");
     return ingredientService.searchIngredients(name);
+  }
+
+  @PostMapping()
+  public IngredientCreateResDto addIngredient(@RequestBody IngredientCreateReqDto ingredientCreateReqDto) {
+    log.info("addIngredient({})", ingredientCreateReqDto);
+    return ingredientService.addIngredient(ingredientCreateReqDto);
   }
 
 }
