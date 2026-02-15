@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { IngredientApi } from '../../core/services/api/ingredient.api';
-import { IngredientCreateReqDto, IngredientDetailDto } from '../../shared/model/ingredient';
+import { IngredientUpdateReqDto } from '../../shared/model/ingredient';
 
 @Component({
   selector: 'app-ingredient-details',
@@ -19,8 +19,8 @@ export class IngredientDetails {
   private route = inject(ActivatedRoute);
 
 
-  protected ingredient = signal<IngredientDetailDto>({
-    id: 0,
+  private id = 0
+  protected ingredient = signal<IngredientUpdateReqDto>({
     name: '',
     price: 0,
     calories: 0,
@@ -28,12 +28,11 @@ export class IngredientDetails {
   });
 
   constructor() {
-    const id = this.route.snapshot.params['id'];
+    this.id = this.route.snapshot.params['id'];
 
-    this.ingredientApiService.getIngredient(id).subscribe({
+    this.ingredientApiService.getIngredient(this.id).subscribe({
       next: (res) => {
         this.ingredient.set({
-          id: res.id,
           name: res.name,
           price: res.price,
           calories: res.calories,
@@ -44,7 +43,7 @@ export class IngredientDetails {
     });
   }
 
-  updateField<K extends keyof IngredientCreateReqDto>(field: K, value: any) {
+  updateField<K extends keyof IngredientUpdateReqDto>(field: K, value: any) {
     this.ingredient.update(prev => ({ ...prev, [field]: value }));
   }
 
@@ -53,7 +52,10 @@ export class IngredientDetails {
   }
 
   updateIngredient() {
-    // TODO
+    this.ingredientApiService.updateIngredient(this.id, this.ingredient()).subscribe({
+      next: () => this.goBack(),
+      error: (err) => console.error('Failed to update', err)
+    })
   }
 
 }
