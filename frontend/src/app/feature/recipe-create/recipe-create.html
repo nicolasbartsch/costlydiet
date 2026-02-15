@@ -36,7 +36,7 @@
           <button class="btn btn-sm btn-outline" (click)="addIngredient()">+ Add Ingredient</button>
         </div>
 
-        <div *ngFor="let ing of selectedIngredients(); let i = index" class="flex gap-2 items-center">
+        <div *ngFor="let ing of selectedIngredients(); let i = index; trackBy: trackByIndex" class="flex gap-2 items-center">
           <!-- Select ingredient -->
           <select class="select select-bordered w-full" [ngModel]="ing.id" (ngModelChange)="updateIngredient(i, 'id', $event)">
             <option [value]="0" disabled>Select ingredient</option>
@@ -52,7 +52,17 @@
         </div>
       </div>
 
-      <!-- Submit -->
+      <div class="border-t border-base-300 pt-4 space-y-1">
+        <div class="flex justify-between text-sm">
+          <span>Total Price:</span>
+          <span class="font-bold">{{ totalPrice() | number:'1.2-2' }} €</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span>Total Calories:</span>
+          <span class="font-bold">{{ totalCalories() | number:'1.0-0' }} kcal</span>
+        </div>
+      </div>
+
       <div class="pt-4">
         <button class="btn btn-primary w-full" (click)="submit()">Save Recipe</button>
       </div>
