@@ -1,0 +1,20 @@
+<div class="flex flex-col items-center p-4 space-y-4">
+  <h1 class="text-2xl font-bold">Recipes</h1>
+  <!-- Search Bar -->
+  <div class="form-control w-full max-w-md">
+    <input type="text" placeholder="Search recipes..." class="input input-bordered w-full" [(ngModel)]="searchQuery">
+  </div>
+
+  <!-- Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    @for (recipe of filteredRecipes; track recipe) {
+      <div (click)="getDetails(recipe.id)" class="card-body h-40 bg-base-200 shadow cursor-pointer hover:bg-base-300 select-none transition duration-150 active:scale-99 focus:ring-2 focus:ring-primary">
+        <h2 class="card-title">{{ recipe.name }}</h2>
+      </div>
+    }
+  </div>
+</div>
+
+<button [routerLink]="'/create-recipe'" class="btn btn-primary fixed bottom-6 right-10 z-50 shadow-lg">
+  <span class="iconify lucide--plus size-8"></span>
+</button>
