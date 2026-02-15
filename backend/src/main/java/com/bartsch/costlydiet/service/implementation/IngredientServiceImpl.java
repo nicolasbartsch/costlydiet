@@ -3,9 +3,16 @@ package com.bartsch.costlydiet.service.implementation;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateReqDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateResDto;
 import com.bartsch.costlydiet.service.IngredientService;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 import com.bartsch.costlydiet.model.mapper.IngredientMapper;
 import com.bartsch.costlydiet.repository.IngredientRepository;
+import com.bartsch.costlydiet.model.entity.Ingredient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,4 +45,19 @@ public class IngredientServiceImpl implements IngredientService {
         .toIngredientCreateResDto(ingredientRepository.save(ingredientMapper.toEntity(ingredientCreateReqDto)));
   }
 
+  @Override
+  @Transactional
+  public IngredientUpdateResDto updateIngredient(Long id, IngredientUpdateReqDto dto) {
+    log.debug("Updating ingredient ID {}: {}", id, dto);
+
+    Ingredient ingredient = ingredientRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Ingredient not found with id: " + id));
+
+    ingredient.setName(dto.getName());
+    ingredient.setPrice(dto.getPrice());
+    ingredient.setCalories(dto.getCalories());
+    ingredient.setNotes(dto.getNotes());
+
+    return ingredientMapper.toIngredientUpdateResDto(ingredient);
+  }
 }

@@ -5,11 +5,15 @@ import java.util.List;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateReqDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateResDto;
 
 public interface IngredientService {
 
   List<IngredientSearchResDto> searchIngredients(String name);
 
   IngredientCreateResDto addIngredient(IngredientCreateReqDto ingredientCreateReqDto);
+
+  IngredientUpdateResDto updateIngredient(Long id, IngredientUpdateReqDto ingredientUpdateReqDto);
 
 }
