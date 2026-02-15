@@ -1,16 +1,22 @@
 package com.bartsch.costlydiet.service.implementation;
 
 import com.bartsch.costlydiet.model.mapper.RecipeMapper;
+import com.bartsch.costlydiet.repository.IngredientRepository;
 import com.bartsch.costlydiet.repository.RecipeRepository;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeDetailDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeSearchResDto;
+import com.bartsch.costlydiet.model.dto.recipe.RecipeCreateReqDto;
+import com.bartsch.costlydiet.model.entity.Ingredient;
 import com.bartsch.costlydiet.model.entity.Recipe;
+import com.bartsch.costlydiet.model.entity.RecipeIngredient;
 import com.bartsch.costlydiet.model.dto.recipeingredient.RecipeIngredientDetailDto;
+import com.bartsch.costlydiet.model.dto.recipeingredient.RecipeIngredientCreateReqDto;
 import com.bartsch.costlydiet.service.RecipeService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,10 +27,13 @@ public class RecipeServiceImpl implements RecipeService {
 
   private final RecipeRepository recipeRepository;
   private final RecipeMapper recipeMapper;
+  private final IngredientRepository ingredientRepository;
 
-  public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper) {
+  public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper,
+      IngredientRepository ingredientRepository) {
     this.recipeRepository = recipeRepository;
     this.recipeMapper = recipeMapper;
+    this.ingredientRepository = ingredientRepository;
   }
 
   @Override
@@ -64,6 +73,34 @@ public class RecipeServiceImpl implements RecipeService {
         .priceTotal(priceTotal)
         .caloriesTotal(caloriesTotal)
         .build();
+  }
+
+  @Override
+  public RecipeDetailDto createRecipe(RecipeCreateReqDto recipeCreateReqDto) {
+    log.debug("creating recipe {}", recipeCreateReqDto);
+
+    Recipe recipe = new Recipe();
+    recipe.setName(recipeCreateReqDto.getName());
+    recipe.setInstructions(recipeCreateReqDto.getInstructions());
+
+    List<RecipeIngredient> ingredients = new ArrayList<>();
+    for (RecipeIngredientCreateReqDto ingredientDto : recipeCreateReqDto.getRecipeIngredients()) {
+      RecipeIngredient ri = new RecipeIngredient();
+      ri.setAmount(ingredientDto.getAmount());
+
+      // Fetch the actual Ingredient entity from the database
+      Ingredient ingredient = this.ingredientRepository.findById(ingredientDto.getId())
+          .orElseThrow(() -> new IllegalArgumentException("Invalid ingredient ID: " + ingredientDto.getId()));
+
+      ri.setIngredient(ingredient);
+      ri.setRecipe(recipe); // <<< this is the critical missing line
+
+      ingredients.add(ri);
+    }
+    recipe.setRecipeIngredients(ingredients);
+
+    Recipe savedRecipe = recipeRepository.save(recipe);
+    return getRecipe(savedRecipe.getId());
   }
 
 }
