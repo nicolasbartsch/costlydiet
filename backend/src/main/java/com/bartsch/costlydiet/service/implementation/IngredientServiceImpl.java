@@ -2,6 +2,7 @@ package com.bartsch.costlydiet.service.implementation;
 
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientDetailDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateResDto;
@@ -39,6 +40,14 @@ public class IngredientServiceImpl implements IngredientService {
   }
 
   @Override
+  public IngredientDetailDto getIngredientById(Long id) {
+    Ingredient ingredient = ingredientRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Ingredient not found with id: " + id));
+
+    return ingredientMapper.toIngredientDetailDto(ingredient);
+  }
+
+  @Override
   public IngredientCreateResDto addIngredient(IngredientCreateReqDto ingredientCreateReqDto) {
     log.debug("Adding ingredient {}", ingredientCreateReqDto);
     return ingredientMapper
@@ -60,4 +69,5 @@ public class IngredientServiceImpl implements IngredientService {
 
     return ingredientMapper.toIngredientUpdateResDto(ingredient);
   }
+
 }
