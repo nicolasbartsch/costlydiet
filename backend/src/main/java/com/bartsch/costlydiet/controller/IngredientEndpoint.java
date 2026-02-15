@@ -2,6 +2,7 @@ package com.bartsch.costlydiet.controller;
 
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientCreateResDto;
+import com.bartsch.costlydiet.model.dto.ingredient.IngredientDetailDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientSearchResDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateReqDto;
 import com.bartsch.costlydiet.model.dto.ingredient.IngredientUpdateResDto;
@@ -33,6 +34,12 @@ public class IngredientEndpoint {
   public List<IngredientSearchResDto> searchIngredients(@RequestParam(required = false) String name) {
     log.info("getIngredients()");
     return ingredientService.searchIngredients(name);
+  }
+
+  @GetMapping("/{id}")
+  public IngredientDetailDto getIngredientById(@PathVariable Long id) {
+    log.info("getIngredient with id {id}", id);
+    return ingredientService.getIngredientById(id);
   }
 
   @PostMapping()
