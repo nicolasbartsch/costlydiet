@@ -4,6 +4,7 @@ import { IngredientList } from './feature/ingredient-list/ingredient-list';
 import { IngredientCreate } from './feature/ingredient-create/ingredient-create';
 import { IngredientDetails } from './feature/ingredient-details/ingredient-details';
 import { RecipeList } from './feature/recipe-list/recipe-list';
+import { RecipeDetails } from './feature/recipe-details/recipe-details';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
       {
         path: 'recipes',
         component: RecipeList
+      },
+      {
+        path: 'recipes/:id',
+        component: RecipeDetails
       },
     ]
   }
