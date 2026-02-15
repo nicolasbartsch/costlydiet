@@ -28,3 +28,11 @@ export interface IngredientCreateResDto {
   calories: number;
   notes: string;
 }
+
+
+export interface IngredientUpdateReqDto {
+  name: string;
+  price: number;
+  calories: number;
+  notes: string;
+}
