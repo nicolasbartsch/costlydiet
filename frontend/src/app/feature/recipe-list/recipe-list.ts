@@ -3,10 +3,11 @@ import { Router, RouterLink, } from '@angular/router';
 import { RecipeSearchResDto } from '../../shared/model/recipe';
 import { FormsModule } from '@angular/forms';
 import { RecipeApi } from '../../core/services/api/recipe.api';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-recipe-list',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, LucideAngularModule],
   templateUrl: './recipe-list.html',
   styleUrl: './recipe-list.css',
 })
