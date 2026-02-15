@@ -1,11 +1,14 @@
 package com.bartsch.costlydiet.service.implementation;
 
 import com.bartsch.costlydiet.model.mapper.RecipeMapper;
-import com.bartsch.costlydiet.repository.IngredientRepository;
 import com.bartsch.costlydiet.repository.RecipeRepository;
-
+import com.bartsch.costlydiet.model.dto.recipe.RecipeDetailDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeSearchResDto;
+import com.bartsch.costlydiet.model.entity.Recipe;
+import com.bartsch.costlydiet.model.dto.recipeingredient.RecipeIngredientDetailDto;
 import com.bartsch.costlydiet.service.RecipeService;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,19 +21,49 @@ public class RecipeServiceImpl implements RecipeService {
 
   private final RecipeRepository recipeRepository;
   private final RecipeMapper recipeMapper;
-  private final IngredientRepository ingredientRepository;
 
-  public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper,
-      IngredientRepository ingredientRepository) {
+  public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeMapper recipeMapper) {
     this.recipeRepository = recipeRepository;
     this.recipeMapper = recipeMapper;
-    this.ingredientRepository = ingredientRepository;
   }
 
   @Override
   public List<RecipeSearchResDto> searchRecipes(String name) {
     name = name == null ? "" : name;
     return recipeMapper.toRecipeSearchResDtoList(recipeRepository.searchByNameContains(name));
+  }
+
+  @Override
+  public RecipeDetailDto getRecipe(Long id) {
+    Recipe recipe = recipeRepository.findByIdWithIngredients(id)
+        .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+
+    List<RecipeIngredientDetailDto> ingredientDtos = recipe.getRecipeIngredients().stream()
+        .map(ri -> {
+          long price = Math.round(ri.getAmount() * (ri.getIngredient().getPrice() / 1000.0));
+          long calories = Math.round(ri.getAmount() * (ri.getIngredient().getCalories() / 100.0));
+
+          return RecipeIngredientDetailDto.builder()
+              .name(ri.getIngredient().getName())
+              .amount(ri.getAmount())
+              .price(price)
+              .calories(calories)
+              .build();
+        }).toList();
+
+    long amountTotal = ingredientDtos.stream().mapToLong(RecipeIngredientDetailDto::getAmount).sum();
+    long priceTotal = ingredientDtos.stream().mapToLong(RecipeIngredientDetailDto::getPrice).sum();
+    long caloriesTotal = ingredientDtos.stream().mapToLong(RecipeIngredientDetailDto::getCalories).sum();
+
+    return RecipeDetailDto.builder()
+        .id(recipe.getId())
+        .name(recipe.getName())
+        .instructions(recipe.getInstructions())
+        .recipeIngredients(ingredientDtos)
+        .amountTotal(amountTotal)
+        .priceTotal(priceTotal)
+        .caloriesTotal(caloriesTotal)
+        .build();
   }
 
 }
