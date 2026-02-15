@@ -19,3 +19,14 @@ export interface RecipeIngredientDetailDto {
   price: number;
   calories: number;
 }
+
+export interface RecipeCreateReqDto {
+  name: string;
+  instructions: string;
+  recipeIngredients: RecipeIngredientCreateReqDto[];
+}
+
+export interface RecipeIngredientCreateReqDto {
+  id: number;
+  amount: number;
+}
