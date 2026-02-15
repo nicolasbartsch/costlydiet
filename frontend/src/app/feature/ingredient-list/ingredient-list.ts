@@ -41,4 +41,7 @@ export class IngredientList {
     this.router.navigate(['/ingredients/create'])
   }
 
+  onCardClick(id: number) {
+    this.router.navigate([`/ingredients/${id}`])
+  }
 }
