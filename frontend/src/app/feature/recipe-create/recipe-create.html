@@ -1,0 +1,62 @@
+<div class="flex flex-col items-center p-4 space-y-6">
+
+  <div class="w-full max-w-lg flex flex-col gap-4">
+    <div>
+      <button class=" flex btn btn-active gap-2" (click)="goBack()">
+        <lucide-icon name="arrow-left" [size]="18"></lucide-icon>
+        Back
+      </button>
+    </div>
+    <div class="flex justify-center">
+      <h1 class="text-2xl font-bold">New Recipe</h1>
+    </div>
+  </div>
+
+  <div class="card w-full max-w-lg bg-base-200 shadow-xl">
+    <div class="card-body space-y-4">
+
+
+
+      <!-- Name -->
+      <div class="form-control flex flex-col">
+        <label class="label"><span class="label-text">Name</span></label>
+        <input [(ngModel)]="recipeName" class="input input-bordered" type="text" placeholder="e.g. Protein Shake" />
+      </div>
+
+      <!-- Instructions -->
+      <div class="form-control flex flex-col">
+        <label class="label"><span class="label-text">Instructions</span></label>
+        <textarea [(ngModel)]="instructions" class="textarea textarea-bordered" rows="4"></textarea>
+      </div>
+
+      <!-- Ingredients -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-medium">Ingredients</h3>
+          <button class="btn btn-sm btn-outline" (click)="addIngredient()">+ Add Ingredient</button>
+        </div>
+
+        <div *ngFor="let ing of selectedIngredients(); let i = index" class="flex gap-2 items-center">
+          <!-- Select ingredient -->
+          <select class="select select-bordered w-full" [ngModel]="ing.id" (ngModelChange)="updateIngredient(i, 'id', $event)">
+            <option [value]="0" disabled>Select ingredient</option>
+            <option *ngFor="let opt of ingredients()" [value]="opt.id">{{ opt.name }}</option>
+          </select>
+
+          <!-- Amount -->
+          <input class="input input-bordered w-24" type="number" placeholder="g"
+                 [ngModel]="ing.amount" (ngModelChange)="updateIngredient(i, 'amount', $event)" />
+
+          <!-- Remove -->
+          <button class="btn btn-sm btn-error" (click)="removeIngredient(i)">✕</button>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-4">
+        <button class="btn btn-primary w-full" (click)="submit()">Save Recipe</button>
+      </div>
+
+    </div>
+  </div>
+</div>
