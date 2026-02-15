@@ -6,6 +6,14 @@ export interface IngredientSearchResDto {
   notes: string;
 }
 
+export interface IngredientDetailDto {
+  id: number;
+  name: string;
+  price: number;
+  calories: number;
+  notes: string;
+}
+
 export interface IngredientCreateReqDto {
   name: string;
   price: number;
