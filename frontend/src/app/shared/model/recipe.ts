@@ -14,6 +14,7 @@ export interface RecipeDetailDto {
 }
 
 export interface RecipeIngredientDetailDto {
+  id: number;
   name: string;
   amount: number;
   price: number;
