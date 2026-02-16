@@ -30,3 +30,14 @@ export interface RecipeIngredientCreateReqDto {
   id: number;
   amount: number;
 }
+
+export interface RecipeUpdateReqDto {
+  name: string;
+  instructions: string;
+  recipeIngredients: RecipeIngredientUpdateReqDto[];
+}
+
+export interface RecipeIngredientUpdateReqDto {
+  id: number;
+  amount: number;
+}
