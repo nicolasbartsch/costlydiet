@@ -6,6 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class RecipeIngredientDetailDto {
+  private long id;
   private String name;
   private long amount;
   private long price;
