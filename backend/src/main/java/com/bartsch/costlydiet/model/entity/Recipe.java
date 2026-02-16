@@ -27,7 +27,7 @@ public class Recipe {
   @Column
   private String instructions;
 
-  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<RecipeIngredient> recipeIngredients;
 
   @Column

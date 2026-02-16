@@ -7,11 +7,13 @@ import com.bartsch.costlydiet.service.RecipeService;
 import java.util.List;
 
 import com.bartsch.costlydiet.model.dto.recipe.RecipeSearchResDto;
+import com.bartsch.costlydiet.model.dto.recipe.RecipeUpdateReqDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeCreateReqDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeDetailDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,5 +46,12 @@ public class RecipeEndpoint {
   public RecipeDetailDto createRecipe(@RequestBody RecipeCreateReqDto recipeCreateReqDto) {
     log.info("createRecipe({})", recipeCreateReqDto);
     return recipeService.createRecipe(recipeCreateReqDto);
+  }
+
+  @PutMapping("/{id}")
+  public RecipeDetailDto updateRecipe(@PathVariable Long id,
+      @RequestBody RecipeUpdateReqDto recipeUpdateReqDto) {
+    log.info("updateRecipe({})", recipeUpdateReqDto);
+    return recipeService.updateRecipe(id, recipeUpdateReqDto);
   }
 }
