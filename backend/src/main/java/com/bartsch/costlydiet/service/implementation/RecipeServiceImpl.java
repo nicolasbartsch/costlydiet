@@ -5,6 +5,7 @@ import com.bartsch.costlydiet.repository.IngredientRepository;
 import com.bartsch.costlydiet.repository.RecipeRepository;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeDetailDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeSearchResDto;
+import com.bartsch.costlydiet.model.dto.recipe.RecipeUpdateReqDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeCreateReqDto;
 import com.bartsch.costlydiet.model.entity.Ingredient;
 import com.bartsch.costlydiet.model.entity.Recipe;
@@ -14,6 +15,7 @@ import com.bartsch.costlydiet.model.dto.recipeingredient.RecipeIngredientCreateR
 import com.bartsch.costlydiet.service.RecipeService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
           long calories = Math.round(ri.getAmount() * (ri.getIngredient().getCalories() / 100.0));
 
           return RecipeIngredientDetailDto.builder()
+              .id(ri.getIngredient().getId())
               .name(ri.getIngredient().getName())
               .amount(ri.getAmount())
               .price(price)
@@ -101,6 +104,37 @@ public class RecipeServiceImpl implements RecipeService {
 
     Recipe savedRecipe = recipeRepository.save(recipe);
     return getRecipe(savedRecipe.getId());
+  }
+
+  @Transactional
+  public RecipeDetailDto updateRecipe(Long id, RecipeUpdateReqDto recipeUpdateReqDto) {
+    Recipe recipe = recipeRepository.findByIdWithIngredients(id)
+        .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+
+    recipe.setName(recipeUpdateReqDto.getName());
+    recipe.setInstructions(recipeUpdateReqDto.getInstructions());
+
+    // 1. CLEAR the existing managed collection instead of creating a 'new
+    // ArrayList<>()'
+    recipe.getRecipeIngredients().clear();
+
+    for (RecipeIngredientCreateReqDto ingredientDto : recipeUpdateReqDto.getRecipeIngredients()) {
+      RecipeIngredient ri = new RecipeIngredient();
+      ri.setAmount(ingredientDto.getAmount());
+
+      Ingredient ingredient = this.ingredientRepository.findById(ingredientDto.getId())
+          .orElseThrow(() -> new IllegalArgumentException("Invalid ingredient ID"));
+
+      ri.setIngredient(ingredient);
+      ri.setRecipe(recipe);
+
+      // 2. ADD to the existing collection
+      recipe.getRecipeIngredients().add(ri);
+    }
+
+    // Hibernate will now issue DELETEs for the old ones and INSERTs for the new
+    // ones
+    return recipeMapper.toRecipeDetailDto(recipe);
   }
 
 }

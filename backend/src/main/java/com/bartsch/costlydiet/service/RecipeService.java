@@ -1,6 +1,7 @@
 package com.bartsch.costlydiet.service;
 
 import com.bartsch.costlydiet.model.dto.recipe.RecipeSearchResDto;
+import com.bartsch.costlydiet.model.dto.recipe.RecipeUpdateReqDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeCreateReqDto;
 import com.bartsch.costlydiet.model.dto.recipe.RecipeDetailDto;
 
@@ -12,4 +13,6 @@ public interface RecipeService {
   RecipeDetailDto getRecipe(Long id);
 
   RecipeDetailDto createRecipe(RecipeCreateReqDto recipeCreateReqDto);
+
+  RecipeDetailDto updateRecipe(Long id, RecipeUpdateReqDto recipeUpdateReqDto);
 }
