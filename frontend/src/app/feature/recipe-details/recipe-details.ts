@@ -3,10 +3,11 @@ import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeApi } from '../../core/services/api/recipe.api';
 import { RecipeDetailDto } from '../../shared/model/recipe';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-recipe-details',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, LucideAngularModule],
   templateUrl: './recipe-details.html',
   styleUrl: './recipe-details.css',
 })
@@ -17,12 +18,12 @@ export class RecipeDetails {
   private router = inject(Router);
 
   recipe = signal<RecipeDetailDto | null>(null);
+  private idParam = this.route.snapshot.paramMap.get('id');
 
   constructor() {
-    const idParam = this.route.snapshot.paramMap.get('id');
 
-    if (idParam) {
-      const id = +idParam; // convert to number
+    if (this.idParam) {
+      const id = +this.idParam; // convert to number
       this.recipeApiService.getRecipe(id).subscribe({
         next: (recipe) => this.recipe.set(recipe),
         error: (err) => console.error(err),
@@ -38,6 +39,10 @@ export class RecipeDetails {
 
   goBack() {
     this.router.navigate([`recipes`])
+  }
+
+  edit() {
+    this.router.navigate([`recipes/${this.idParam}/edit`])
   }
 
 }
